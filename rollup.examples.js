@@ -47,7 +47,7 @@ const rollupExamplesConfig = {
     serveFiles &&
       serve({
         open: true,
-        port: 3000,
+        port: 4000,
         contentBase: 'example/public/',
         historyApiFallback: true,
       }),

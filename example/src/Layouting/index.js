@@ -16,16 +16,13 @@ const nodeExtent = [
 
 const LayoutFlow = () => {
   const [elements, setElements] = useState(initialElements);
-  const onConnect = (params) => setElements((els) => addEdge(params, els));
-  const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
 
   const onLayout = (direction) => {
-    const isHorizontal = direction === 'LR';
-    dagreGraph.setGraph({ rankdir: direction });
+    dagreGraph.setGraph({ rankdir: 'LR', align: 'UL' });
 
     elements.forEach((el) => {
       if (isNode(el)) {
-        dagreGraph.setNode(el.id, { width: 150, height: 50 });
+        dagreGraph.setNode(el.id, { width: 150, height: 0 });
       } else {
         dagreGraph.setEdge(el.source, el.target);
       }
@@ -36,8 +33,8 @@ const LayoutFlow = () => {
     const layoutedElements = elements.map((el) => {
       if (isNode(el)) {
         const nodeWithPosition = dagreGraph.node(el.id);
-        el.targetPosition = isHorizontal ? 'left' : 'top';
-        el.sourcePosition = isHorizontal ? 'right' : 'bottom';
+        el.targetPosition = 'left';
+        el.sourcePosition = 'right';
         // we need to pass a slighltiy different position in order to notify react flow about the change
         // @TODO how can we change the position handling so that we dont need this hack?
         el.position = { x: nodeWithPosition.x + Math.random() / 1000, y: nodeWithPosition.y };
@@ -54,10 +51,8 @@ const LayoutFlow = () => {
       <ReactFlowProvider>
         <ReactFlow
           elements={elements}
-          onConnect={onConnect}
-          onElementsRemove={onElementsRemove}
-          nodeExtent={nodeExtent}
-          onLoad={() => onLayout('TB')}
+          onLoad={() => onLayout('LR')}
+          nodesDraggable={false}
         >
           <Controls />
         </ReactFlow>
